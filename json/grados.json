@@ -1,0 +1,40 @@
+[
+    {
+        "nombre": "SEGUNDO GRADO",
+        "materia":[{"nombre":"Lengua",
+                    "alumnos":[{"nombre":"Gaston","apellido":"Astudillo","notas":[],"ponderacion":0},
+                                {"nombre":"Fernanda","apellido":"Luquez","notas":[],"ponderacion":0},
+                                {"nombre":"Luz","apellido":"Gomez","notas":[],"ponderacion":0},
+                                {"nombre":"Emilia","apellido":"Juarez","notas":[],"ponderacion":0},
+                                {"nombre":"Pedro","apellido":"Ortigosa","notas":[],"ponderacion":0}],
+                    "metodoEval":[["Examen 1",25],["Examen 2",35],["Examen Final",40]]
+                    },  
+                    {"nombre": "Matemática",
+                    "alumnos":[{"nombre":"Gaston","apellido":"Astudillo","notas":[],"ponderacion":0},
+                                {"nombre":"Fernanda","apellido":"Luquez","notas":[],"ponderacion":0},
+                                {"nombre":"Luz","apellido":"Gomez","notas":[],"ponderacion":0},
+                                {"nombre":"Emilia","apellido":"Juarez","notas":[],"ponderacion":0},
+                                {"nombre":"Pedro","apellido":"Ortigosa","notas":[],"ponderacion":0}],
+                    "metodoEval":[["Examen 1",30],["Examen 2",20],["Examen Final",50]]
+                    }]
+    },
+    {
+        "nombre": "TERCER GRADO",
+        "materia":[{"nombre":"Educacion Física",
+                    "alumnos":[{"nombre":"Natalia","apellido":"Vezzoni","notas":[],"ponderacion":0},
+                                {"nombre":"Luciano","apellido":"Molina","notas":[],"ponderacion":0},
+                                {"nombre":"Romina","apellido":"Gonzalez","notas":[],"ponderacion":0},
+                                {"nombre":"Luis","apellido":"Diaz","notas":[],"ponderacion":0},
+                                {"nombre":"Daniel","apellido":"Rocha","notas":[],"ponderacion":0}],
+                    "metodoEval":[["Examen 1",25],["Examen 2",30],["Examen Final",45]]
+                    },
+                    {"nombre": "Ciencias Naturales",
+                    "alumnos":[{"nombre":"Natalia","apellido":"Vezzoni","notas":[],"ponderacion":0},
+                                {"nombre":"Luciano","apellido":"Molina","notas":[],"ponderacion":0},
+                                {"nombre":"Romina","apellido":"Gonzalez","notas":[],"ponderacion":0},
+                                {"nombre":"Luis","apellido":"Diaz","notas":[],"ponderacion":0},
+                                {"nombre":"Daniel","apellido":"Rocha","notas":[],"ponderacion":0}],
+                    "metodoEval":[["Examen 1",20],["Examen 2",25],["Examen Final",55]]
+                    }]
+    }
+]
