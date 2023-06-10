@@ -11,25 +11,17 @@ async function cargarDatos() {
     console.error("Error al cargar los datos del archivo JSON:", error);
     }
 }
+cargarDatos();
 
-/* function procesarDatos(data) {
-    // Acceder y modificar los datos
-    console.log(data);
 
-    data.propiedad = 'nuevo valor';
-
-    // Llamar a una función para guardar los cambios
-        guardarCambios(data); 
-    } */
-
-/* function guardarCambios(data) {
-    // Enviar los datos modificados al servidor para guardarlos en un archivo JSON
+function guardarCambios(grados) {
+    
     fetch('guardar.php', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(grados)
     })
     .then(response => {
         if (response.ok) {
@@ -38,9 +30,9 @@ async function cargarDatos() {
         console.log('Error al guardar los cambios');
         }
     });
-    } */
+}
 
-cargarDatos();
+
 
 /* Grupo de botones menu */
 const btnGrados = document.getElementById("btnGrados");
@@ -271,12 +263,13 @@ function mostrarTablaAlumnosRegNotas() {
         const ponderacionEval = grados[iGrado].materia[iMateria].metodoEval.map((met) => met[1]); // Array de ponderaciones
 
 
-        grados[iGrado].materia[iMateria].metodoEval.forEach((met) =>{
+        grados[iGrado].materia[iMateria].metodoEval.forEach((met,indice) =>{
             const celdaNota = document.createElement('td');
             const inputNota = document.createElement('input');
             inputNota.type = 'number';
             inputNota.min = 0;
             inputNota.max = 10;
+            inputNota.value = alum.notas[indice];
             inputNota.classList.add('form-control');
             inputNota.classList.add('text-center');
             inputNota.classList.add('inputNota');
@@ -289,7 +282,7 @@ function mostrarTablaAlumnosRegNotas() {
         const celdaPonderado = document.createElement('td');
         const inputPonderado = document.createElement('input');
         inputPonderado.type = 'number';
-        inputPonderado.value = '0';
+        inputPonderado.value = alum.ponderacion;
         inputPonderado.disabled = true;
         inputPonderado.classList.add('form-control');
         inputPonderado.classList.add('text-center');
@@ -345,8 +338,7 @@ function guardarNotas(){
     const inputsNotas = document.getElementsByClassName('inputNota')
     const inputsPonderado = document.getElementsByClassName('inputPonderado')
 
-    
-    /* console.log(iGrado);
+    console.log(iGrado);
     console.log(iMateria);
     for (let i = 0; i < inputsNotas.length; i++){
         console.log(inputsNotas[i].value);
@@ -354,11 +346,20 @@ function guardarNotas(){
     console.log('ahora las ponderaciones');
     for (let i = 0; i < inputsPonderado.length; i++){
         console.log(inputsPonderado[i].value);
-    } */
+    }
 
-    
+    /* grados[iGrado].materia[iMateria].alumnos.forEach((alum, indice) => {
+        for (let i=0; i<3; i++){
+            alum.notas.push(inputsNotas[i]);
+            inputsNotas.splice(0,3);
+            console.log(inputsNotas);
+        }
+        alum.ponderacion = inputsPonderado[indice];
+        inputsPonderado.splice(0,1);
+        console.log(inputsPonderado);
+    });
 
-    
+    guardarCambios(grados); */
 }
 
 
