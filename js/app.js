@@ -59,16 +59,20 @@ const tablaDet2 = document.getElementById("tablaDet2");
 const contDet1 = document.getElementById("contDet1");
 const contDet2 = document.getElementById("contDet2");
 const contListaAlum = document.getElementById("contListaAlum");
+const contLIstaAlumVisu = document.getElementById("contLIstaAlumVisu");
 
 /* Otros Botones */
 const btnNuevoMetEval = document.getElementById("btnNuevoMetEval");
 const btnBusc = document.getElementById("btnBusc");
 const btnGuardarNotas = document.getElementById("btnGuardarNotas");
 const btnCancelarNotas = document.getElementById("btnCancelarNotas");
+const btnBuscVisNotas = document.getElementById("btnBuscVisNotas");
 
 /* Selectores */
 const selectorGrado = document.getElementById("selectorGrado");
 const selectorMateria = document.getElementById("selectorMateria");
+const selectorGradoVisu = document.getElementById("selectorGradoVisu");
+const selectorMateriaVisu = document.getElementById("selectorMateriaVisu");
 
 btnGrados.onclick = () => {
   contGrados.classList.remove("d-none");
@@ -107,6 +111,8 @@ btnVisuNotas.onclick = () => {
     contMetodoEval.classList.add("d-none");
     contRegistro.classList.add("d-none");
     contVisualizar.classList.remove("d-none");
+    popularOpcionGradoVisu();
+    generarOpcionesMateriasVisu();
 };
 
 contDet1.onclick = () => {
@@ -340,7 +346,7 @@ function guardarNotas(){
     const inputsPonderado = document.getElementsByClassName('inputPonderado')
 
     
-    console.log(iGrado);
+    /* console.log(iGrado);
     console.log(iMateria);
     for (let i = 0; i < inputsNotas.length; i++){
         console.log(inputsNotas[i].value);
@@ -348,7 +354,117 @@ function guardarNotas(){
     console.log('ahora las ponderaciones');
     for (let i = 0; i < inputsPonderado.length; i++){
         console.log(inputsPonderado[i].value);
-    }
+    } */
 
     
+
+    
+}
+
+
+/* Popular opciones en Visualizacion de Notas */
+function popularOpcionGradoVisu() {
+    selectorGradoVisu.innerHTML =
+        '<option value="">--- Seleccionar Opción ---</option>';
+    grados.forEach((grado, indice) => {
+        const option = document.createElement("option");
+        option.textContent = grado.nombre;
+        option.value = indice.toString();
+        selectorGradoVisu.appendChild(option);
+    });
+}
+function generarOpcionesMateriasVisu() {
+    const indiceGrado = parseInt(selectorGradoVisu.value);
+    const gradoSeleccionado = grados[indiceGrado];
+
+    selectorMateriaVisu.innerHTML =
+        '<option value="">--- Seleccionar Opción ---</option>';
+
+    if (gradoSeleccionado) {
+        gradoSeleccionado.materia.forEach((materia, indice) => {
+        const opcion = document.createElement("option");
+        opcion.value = indice.toString();
+        opcion.textContent = materia.nombre;
+        selectorMateriaVisu.appendChild(opcion);
+        });
+    }
+}
+selectorGradoVisu.addEventListener("change", generarOpcionesMateriasVisu);
+
+
+btnBuscVisNotas.onclick = () => {
+    contLIstaAlumVisu.classList.remove("d-none");
+    mostrarTablaAlumnosVisuNotas();
+};
+
+function mostrarTablaAlumnosVisuNotas(){
+    // obtengo los valores seleccionados del select del grado y la materia
+    let iGrado = selectorGradoVisu.value;
+    let iMateria = selectorMateriaVisu.value;
+
+    const tablaVisualNotas = document.getElementById('tablaVisualNotas');
+    const tabla = document.createElement('thead');
+    tablaVisualNotas.innerHTML = '';
+
+    const encabezadoFila = document.createElement('tr');
+    encabezadoFila.classList.add('text-center');
+
+    const encabezadoAlumno = document.createElement('th');
+    encabezadoAlumno.textContent = 'ALUMNO';
+    encabezadoAlumno.classList.add('col-sm-3');
+    encabezadoFila.appendChild(encabezadoAlumno);
+
+    grados[iGrado].materia[iMateria].metodoEval.forEach((met) => {
+        let encabEval = document.createElement('th');
+        encabEval.textContent = `${met[0]} (${met[1]} %)`;
+        encabEval.classList.add('col-sm-2');
+        encabezadoFila.appendChild(encabEval);
+    });
+
+    const encabezadoPonderacion = document.createElement('th');
+    encabezadoPonderacion.textContent = 'PONDERADO'
+    encabezadoPonderacion.classList.add('col-sm-2');
+    encabezadoFila.appendChild(encabezadoPonderacion);
+
+    tabla.appendChild(encabezadoFila);
+    tablaVisualNotas.appendChild(tabla);
+
+    const tbody = document.createElement('tbody');
+
+    grados[iGrado].materia[iMateria].alumnos.forEach((alum) =>{
+        const fila = document.createElement('tr');
+        const celdaNombre = document.createElement('td');
+        celdaNombre.textContent = `${alum.apellido}, ${alum.nombre}`;
+        fila.appendChild(celdaNombre);
+
+        grados[iGrado].materia[iMateria].metodoEval.forEach((met,indice) =>{
+            const celdaNota = document.createElement('td');
+            const inputNota = document.createElement('input');
+            inputNota.type = 'number';
+            inputNota.value = alum.notas[indice];
+            inputNota.disabled = true;
+            inputNota.classList.add('form-control');
+            inputNota.classList.add('text-center');
+            inputNota.classList.add('inputNota');
+            
+            celdaNota.appendChild(inputNota);
+            fila.appendChild(celdaNota);
+
+        });
+
+        const celdaPonderado = document.createElement('td');
+        const inputPonderado = document.createElement('input');
+        inputPonderado.type = 'number';
+        inputPonderado.value = alum.ponderacion;
+        inputPonderado.disabled = true;
+        inputPonderado.classList.add('form-control');
+        inputPonderado.classList.add('text-center');
+        inputPonderado.classList.add('inputPonderado');
+
+        celdaPonderado.appendChild(inputPonderado);
+        fila.appendChild(celdaPonderado);
+
+        tbody.appendChild(fila);
+    });
+    tablaVisualNotas.appendChild(tbody);
 }

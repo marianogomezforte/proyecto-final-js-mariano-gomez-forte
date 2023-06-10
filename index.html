@@ -229,6 +229,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Boton Visualizar Notas -->
             <div id="contVisualizar" class="d-none">
                 <div class="border-top border-4 border-warning m-4 rounded bg-white">
@@ -239,54 +240,27 @@
                     <div class="row">
                         <div class="col-4">
                             <label><h6 class="ps-2">Grado</h6></label>
-                            <select class="form-select ms-2" aria-label="Default select example">
+                            <select id="selectorGradoVisu" class="form-select ms-2" aria-label="Default select example">
                                 <option selected>--- Seleccionar Opción ---</option>
-                                <option value="1">SEGUNDO GRADO</option>
-                                <option value="2">TERCER GRADO</option>
+                                
                             </select>
                         </div>
                         <div class="col-4">
                             <label><h6 class="ps-2">Materia</h6></label>
-                            <select class="form-select ms-2" aria-label="Default select example">
+                            <select id="selectorMateriaVisu" class="form-select ms-2" aria-label="Default select example">
                                 <option selected>--- Seleccionar Opción ---</option>
-                                <option value="1">Lengua</option>
-                                <option value="2">Matemática</option>
-                                <option value="2">Ciencias Naturales</option>
+                                
                             </select>
+                        </div>
+                        <div>
+                            <button id="btnBuscVisNotas" type="button" class="btn btn-success rounded m-2 p-2 col-2">Buscar</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="border-top border-4 border-warning m-4 rounded bg-white">
+                <div id="contLIstaAlumVisu" class="d-none border-top border-4 border-warning m-4 rounded bg-white">
                     <table id="tablaVisualNotas" class="table">
-                        <thead>
-                            <tr class="text-center">
-                                <th scope="col" class="col-sm-3">ALUMNO</th>
-                                <th scope="col" >EXAMEN 1 (15%)</th>
-                                <th scope="col" >EXAMEN 2 (25%)</th>
-                                <th scope="col" >EXAMEN 3 (20%)</th>
-                                <th scope="col" >EXAMEN FINAL (40%)</th>
-                                <th scope="col" >PONDERADO</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Esteban Gonzalez</td>
-                                <td><input class="form-control text-center" type="number" placeholder="0" disabled></td>
-                                <td><input class="form-control text-center" type="number" placeholder="0" disabled></td>
-                                <td><input class="form-control text-center" type="number" placeholder="0" disabled></td>
-                                <td><input class="form-control text-center" type="number" placeholder="0" disabled></td>
-                                <td><input class="form-control text-center" type="number" placeholder="0" disabled></td>
-                            </tr>
-                            <tr>
-                                <td>Natalia Vezzoni</td>
-                                <td><input class="form-control text-center" type="number" placeholder="0" disabled></td>
-                                <td><input class="form-control text-center" type="number" placeholder="0" disabled></td>
-                                <td><input class="form-control text-center" type="number" placeholder="0" disabled></td>
-                                <td><input class="form-control text-center" type="number" placeholder="0" disabled></td>
-                                <td><input class="form-control text-center" type="number" placeholder="0" disabled></td>
-                            </tr>
-                        </tbody>
+                        
                     </table>
                 </div>
             </div>
