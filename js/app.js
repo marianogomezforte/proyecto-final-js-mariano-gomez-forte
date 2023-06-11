@@ -221,12 +221,10 @@ btnBusc.onclick = () => {
 };
 
 function mostrarTablaAlumnosRegNotas() {
-  // obtengo los valores seleccionados del select del grado y la materia
     let iGrado = selectorGrado.value;
     let iMateria = selectorMateria.value;
 
     const tablaRegistroNotas = document.getElementById('tablaRegistroNotas');
-    const tabla = document.createElement('thead');
     tablaRegistroNotas.innerHTML = '';
 
     const encabezadoFila = document.createElement('tr');
@@ -249,12 +247,11 @@ function mostrarTablaAlumnosRegNotas() {
     encabezadoPonderacion.classList.add('col-sm-2');
     encabezadoFila.appendChild(encabezadoPonderacion);
 
-    tabla.appendChild(encabezadoFila);
-    tablaRegistroNotas.appendChild(tabla);
+    tablaRegistroNotas.appendChild(encabezadoFila);
 
     const tbody = document.createElement('tbody');
 
-    grados[iGrado].materia[iMateria].alumnos.forEach((alum) =>{
+    grados[iGrado].materia[iMateria].alumnos.forEach((alum) => {
         const fila = document.createElement('tr');
         const celdaNombre = document.createElement('td');
         celdaNombre.textContent = `${alum.apellido}, ${alum.nombre}`;
@@ -263,27 +260,26 @@ function mostrarTablaAlumnosRegNotas() {
         const notasInput = []; // Array para almacenar los elementos input de notas
         const ponderacionEval = grados[iGrado].materia[iMateria].metodoEval.map((met) => met[1]); // Array de ponderaciones
 
+        grados[iGrado].materia[iMateria].metodoEval.forEach((met, indice) => {
+        const celdaNota = document.createElement('td');
+        const inputNota = document.createElement('input');
+        inputNota.type = 'number';
+        inputNota.min = 0;
+        inputNota.max = 10;
+        inputNota.value = alum.notas[indice];
+        inputNota.classList.add('form-control');
+        inputNota.classList.add('text-center');
+        inputNota.classList.add('inputNota');
+        celdaNota.appendChild(inputNota);
+        fila.appendChild(celdaNota);
 
-        grados[iGrado].materia[iMateria].metodoEval.forEach((met,indice) =>{
-            const celdaNota = document.createElement('td');
-            const inputNota = document.createElement('input');
-            inputNota.type = 'number';
-            inputNota.min = 0;
-            inputNota.max = 10;
-            inputNota.value = alum.notas[indice];
-            inputNota.classList.add('form-control');
-            inputNota.classList.add('text-center');
-            inputNota.classList.add('inputNota');
-/*             inputNota.addEventListener('change', calcularPonderado);*/            celdaNota.appendChild(inputNota);
-            fila.appendChild(celdaNota);
-
-            notasInput.push(inputNota); // Agregar input de nota al array
+        notasInput.push(inputNota); // Agregar input de nota al array
         });
 
         const celdaPonderado = document.createElement('td');
         const inputPonderado = document.createElement('input');
         inputPonderado.type = 'number';
-        inputPonderado.value = alum.ponderacion;
+        inputPonderado.value = calcularPonderado(alum.notas, ponderacionEval);
         inputPonderado.disabled = true;
         inputPonderado.classList.add('form-control');
         inputPonderado.classList.add('text-center');
@@ -295,29 +291,27 @@ function mostrarTablaAlumnosRegNotas() {
         tbody.appendChild(fila);
 
         // Evento al ingresar nota
-        notasInput.forEach((input) => {
-            input.addEventListener('input', () => {
-                const nota = parseFloat(input.value);
-            
-                if (isNaN(nota) || nota < 0 || nota > 10) {
-                    input.value = ''; 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Nota Inválida',
-                        text: 'Por favor ingrese una nota válida (entre 0 y 10)',
-                    });
-                    } else {
-                    const notas = Array.from(notasInput).map((input) => parseFloat(input.value));
-                    const ponderacionEval = grados[iGrado].materia[iMateria].metodoEval.map((met) => met[1]);
-                    const ponderado = calcularPonderado(notas, ponderacionEval);
-                    const celdaPonderado = input.parentNode.nextElementSibling.querySelector('input');
-                    celdaPonderado.value = ponderado.toFixed(2);
-                }
+        notasInput.forEach((input, index) => {
+        input.addEventListener('input', () => {
+            const nota = parseFloat(input.value);
+
+            if (isNaN(nota) || nota < 0 || nota > 10) {
+            input.value = '';
+            Swal.fire({
+                icon: 'error',
+                title: 'Nota Inválida',
+                text: 'Por favor ingrese una nota válida (entre 0 y 10)',
             });
+            } else {
+                const notas = notasInput.map((input) => parseFloat(input.value));
+                const ponderado = calcularPonderado(notas, ponderacionEval);
+                inputPonderado.value = ponderado.toFixed(2);
+
+            }
         });
-        
-            
+        });
     });
+
     tablaRegistroNotas.appendChild(tbody);
 }
 
