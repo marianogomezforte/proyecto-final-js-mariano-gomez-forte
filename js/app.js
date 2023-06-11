@@ -14,7 +14,7 @@ async function cargarDatos() {
 cargarDatos();
 
 
-function guardarCambios(grados) {
+/* function guardarCambios(grados) { // no funciona seguir investigandos
     
     fetch('guardar.php', {
         method: 'POST',
@@ -30,7 +30,7 @@ function guardarCambios(grados) {
         console.log('Error al guardar los cambios');
         }
     });
-}
+} */
 
 
 
@@ -67,13 +67,13 @@ const selectorGradoVisu = document.getElementById("selectorGradoVisu");
 const selectorMateriaVisu = document.getElementById("selectorMateriaVisu");
 
 btnGrados.onclick = () => {
-  contGrados.classList.remove("d-none");
-  contDetGrados.classList.add("d-none");
-  contMetodoEval.classList.add("d-none");
-  contRegistro.classList.add("d-none");
-  contVisualizar.classList.add("d-none");
-  tablaDet1.classList.add("d-none");
-  tablaDet2.classList.add("d-none");
+    contGrados.classList.remove("d-none");
+    contDetGrados.classList.add("d-none");
+    contMetodoEval.classList.add("d-none");
+    contRegistro.classList.add("d-none");
+    contVisualizar.classList.add("d-none");
+    tablaDet1.classList.add("d-none");
+    tablaDet2.classList.add("d-none");
 };
 
 btnMetEval.onclick = () => {
@@ -103,6 +103,7 @@ btnVisuNotas.onclick = () => {
     contMetodoEval.classList.add("d-none");
     contRegistro.classList.add("d-none");
     contVisualizar.classList.remove("d-none");
+    contLIstaAlumVisu.classList.add('d-none');
     popularOpcionGradoVisu();
     generarOpcionesMateriasVisu();
 };
@@ -329,7 +330,22 @@ function calcularPonderado(notas, ponderacionEval) {
     return ponderado;
 }
 
-btnGuardarNotas.addEventListener('click', guardarNotas);
+btnGuardarNotas.onclick = () => {
+    Swal.fire({
+        title: 'Desea guardar los cambios?',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: 'Guardar',
+        denyButtonText: `Cancelar`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire('Guardado!', '', 'success');
+            guardarNotas();
+        } else if (result.isDenied) {
+            Swal.fire('No se guardaron los cambios', '', 'info');
+        }
+    })
+}
 
 function guardarNotas(){
     // Obtén los índices del grado y la materia seleccionados
@@ -337,31 +353,60 @@ function guardarNotas(){
     const iMateria = selectorMateria.value;
     const inputsNotas = document.getElementsByClassName('inputNota')
     const inputsPonderado = document.getElementsByClassName('inputPonderado')
+    const arrayNotas = [];
+    const arrayPonderado = [];
 
-    console.log(iGrado);
-    console.log(iMateria);
+    
     for (let i = 0; i < inputsNotas.length; i++){
         console.log(inputsNotas[i].value);
+        arrayNotas.push(inputsNotas[i].value);
     }
     console.log('ahora las ponderaciones');
     for (let i = 0; i < inputsPonderado.length; i++){
         console.log(inputsPonderado[i].value);
+        arrayPonderado.push(inputsPonderado[i].value);
     }
-
-    /* grados[iGrado].materia[iMateria].alumnos.forEach((alum, indice) => {
+    console.log(arrayNotas);
+    console.log(arrayPonderado);
+    
+    grados[iGrado].materia[iMateria].alumnos.forEach((alum, indice) => {
+        alum.notas = [];
         for (let i=0; i<3; i++){
-            alum.notas.push(inputsNotas[i]);
-            inputsNotas.splice(0,3);
-            console.log(inputsNotas);
+            alum.notas.push(arrayNotas[i]);
         }
-        alum.ponderacion = inputsPonderado[indice];
-        inputsPonderado.splice(0,1);
-        console.log(inputsPonderado);
+        arrayNotas.splice(0,3);
+        console.log(arrayNotas);
+        alum.ponderacion = arrayPonderado[indice];
+        console.log(arrayPonderado);
     });
 
-    guardarCambios(grados); */
+    localStorage.setItem("grados", JSON.stringify(grados));
+
+    /* guardarCambios(grados); */
 }
 
+btnCancelarNotas.onclick = () => {
+    Swal.fire({
+        title: 'Seguro desea canelar? Se perderan los cambios realizados',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: 'Aceptar',
+        denyButtonText: `Cancelar`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire('No se guardaron los cambios!', '', 'info');
+            contGrados.classList.add("d-none");
+            contDetGrados.classList.add("d-none");
+            contMetodoEval.classList.add("d-none");
+            contRegistro.classList.remove("d-none");
+            contVisualizar.classList.add("d-none");
+            contListaAlum.classList.add("d-none");
+            popularOpcionGrado();
+            generarOpcionesMaterias();
+        }
+    })
+    
+}
 
 /* Popular opciones en Visualizacion de Notas */
 function popularOpcionGradoVisu() {
@@ -469,3 +514,4 @@ function mostrarTablaAlumnosVisuNotas(){
     });
     tablaVisualNotas.appendChild(tbody);
 }
+
