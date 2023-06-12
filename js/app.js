@@ -2,37 +2,21 @@ let grados; // Variable para almacenar los datos del archivo JSON
 
 async function cargarDatos() {
     try {
-    const response = await fetch("./json/grados.json");
-    grados = await response.json();
-
-    console.log(grados);
-    localStorage.setItem("grados", JSON.stringify(grados));
-    } catch (error) {
-    console.error("Error al cargar los datos del archivo JSON:", error);
-    }
+        const datosAlmacenados = localStorage.getItem("grados");
+            if (datosAlmacenados) {
+                grados = JSON.parse(datosAlmacenados);
+            } else {
+                const response = await fetch("./json/grados.json");
+                grados = await response.json();
+                localStorage.setItem("grados", JSON.stringify(grados));
+            }
+    
+        console.log(grados);
+        } catch (error) {
+            console.error("Error al cargar los datos:", error);
+        }
 }
 cargarDatos();
-
-
-/* function guardarCambios(grados) { // no funciona seguir investigandos
-    
-    fetch('guardar.php', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(grados)
-    })
-    .then(response => {
-        if (response.ok) {
-        console.log('Cambios guardados exitosamente');
-        } else {
-        console.log('Error al guardar los cambios');
-        }
-    });
-} */
-
-
 
 /* Grupo de botones menu */
 const btnGrados = document.getElementById("btnGrados");
@@ -257,7 +241,7 @@ function mostrarTablaAlumnosRegNotas() {
         celdaNombre.textContent = `${alum.apellido}, ${alum.nombre}`;
         fila.appendChild(celdaNombre);
 
-        const notasInput = []; // Array para almacenar los elementos input de notas
+        const notasInput = [];
         const ponderacionEval = grados[iGrado].materia[iMateria].metodoEval.map((met) => met[1]); // Array de ponderaciones
 
         grados[iGrado].materia[iMateria].metodoEval.forEach((met, indice) => {
@@ -273,7 +257,7 @@ function mostrarTablaAlumnosRegNotas() {
         celdaNota.appendChild(inputNota);
         fila.appendChild(celdaNota);
 
-        notasInput.push(inputNota); // Agregar input de nota al array
+        notasInput.push(inputNota);
         });
 
         const celdaPonderado = document.createElement('td');
@@ -315,7 +299,6 @@ function mostrarTablaAlumnosRegNotas() {
     tablaRegistroNotas.appendChild(tbody);
 }
 
-// Función para calcular el ponderado
 function calcularPonderado(notas, ponderacionEval) {
     let ponderado = 0;
     for (let i = 0; i < notas.length; i++) {
@@ -326,23 +309,34 @@ function calcularPonderado(notas, ponderacionEval) {
 
 btnGuardarNotas.onclick = () => {
     Swal.fire({
-        title: 'Desea guardar los cambios?',
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonText: 'Guardar',
-        denyButtonText: `Cancelar`,
+        title: 'Confirma guardar los cambios?',
+        text: "Puede modificar las notas mas adelante",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Guardar'
     }).then((result) => {
         if (result.isConfirmed) {
-            Swal.fire('Guardado!', '', 'success');
-            guardarNotas();
-        } else if (result.isDenied) {
-            Swal.fire('No se guardaron los cambios', '', 'info');
+            Swal.fire(
+                'Guardado!',
+                'Se guardaron las notas registradas.',
+                'success'
+        )
+        guardarNotas();
+        contGrados.classList.add("d-none");
+        contDetGrados.classList.add("d-none");
+        contMetodoEval.classList.add("d-none");
+        contRegistro.classList.remove("d-none");
+        contVisualizar.classList.add("d-none");
+        contListaAlum.classList.add("d-none");
+        popularOpcionGrado();
+        generarOpcionesMaterias();
         }
     })
 }
 
 function guardarNotas(){
-    // Obtén los índices del grado y la materia seleccionados
     const iGrado = selectorGrado.value;
     const iMateria = selectorMateria.value;
     const inputsNotas = document.getElementsByClassName('inputNota')
@@ -375,13 +369,13 @@ function guardarNotas(){
     });
 
     localStorage.setItem("grados", JSON.stringify(grados));
-
-    /* guardarCambios(grados); */
 }
 
 btnCancelarNotas.onclick = () => {
     Swal.fire({
-        title: 'Seguro desea canelar? Se perderan los cambios realizados',
+        title: 'Desea canelar?',
+        text:"Se perderan los cambios realizados",
+        icon: 'warning',
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: 'Aceptar',
@@ -438,7 +432,6 @@ btnBuscVisNotas.onclick = () => {
 };
 
 function mostrarTablaAlumnosVisuNotas(){
-    // obtengo los valores seleccionados del select del grado y la materia
     let iGrado = selectorGradoVisu.value;
     let iMateria = selectorMateriaVisu.value;
 
