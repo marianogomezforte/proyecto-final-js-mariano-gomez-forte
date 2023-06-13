@@ -1,6 +1,6 @@
 let grados; // Variable para almacenar los datos del archivo JSON
 
-async function cargarDatos() {
+async function cargarDatos() { // verifico si ya se utilizo la app para traer los datos guardados del local storage o llamar al archivo JSON
     try {
         const datosAlmacenados = localStorage.getItem("grados");
             if (datosAlmacenados) {
@@ -50,7 +50,7 @@ const selectorMateria = document.getElementById("selectorMateria");
 const selectorGradoVisu = document.getElementById("selectorGradoVisu");
 const selectorMateriaVisu = document.getElementById("selectorMateriaVisu");
 
-btnGrados.onclick = () => {
+btnGrados.onclick = () => { //acciones para simular que cambia la interfaz sin cargar la pagina nuevamente o llevar a otra pagina
     contGrados.classList.remove("d-none");
     contDetGrados.classList.add("d-none");
     contMetodoEval.classList.add("d-none");
@@ -110,36 +110,7 @@ contDet2.onclick = () => {
     }
 };
 
-/* Popular opciones en Registro de Notas */
-function popularOpcionGrado() {
-    selectorGrado.innerHTML =
-        '<option value="">--- Seleccionar Opción ---</option>';
-    grados.forEach((grado, indice) => {
-        const option = document.createElement("option");
-        option.textContent = grado.nombre;
-        option.value = indice.toString();
-        selectorGrado.appendChild(option);
-    });
-}
-function generarOpcionesMaterias() {
-    const indiceGrado = parseInt(selectorGrado.value);
-    const gradoSeleccionado = grados[indiceGrado];
-
-    selectorMateria.innerHTML =
-        '<option value="">--- Seleccionar Opción ---</option>';
-
-    if (gradoSeleccionado) {
-        gradoSeleccionado.materia.forEach((materia, indice) => {
-        const opcion = document.createElement("option");
-        opcion.value = indice.toString();
-        opcion.textContent = materia.nombre;
-        selectorMateria.appendChild(opcion);
-        });
-    }
-}
-selectorGrado.addEventListener("change", generarOpcionesMaterias);
-
-function llenarTablaMetEval() {
+function llenarTablaMetEval() { // En metodos de evaluacion cargo los predeterminados para ver de que forma se evaluara cada materia
     const tablaMetEval = document.getElementById("tablaMetEval");
     tablaMetEval.innerHTML = "";
 
@@ -180,7 +151,7 @@ function llenarTablaMetEval() {
     });
 }
 
-function mostrarTablaCriterios(metodoEval) {
+function mostrarTablaCriterios(metodoEval) { // muestra los criterios de evaluacion segun la materia
     const tablaCriterio = document.getElementById("tablaCriterio");
     tablaCriterio.innerHTML = "";
 
@@ -199,12 +170,41 @@ function mostrarTablaCriterios(metodoEval) {
     });
 }
 
+/* Popular opciones en Registro de Notas */
+function popularOpcionGrado() {
+    selectorGrado.innerHTML =
+        '<option value="">--- Seleccionar Opción ---</option>';
+    grados.forEach((grado, indice) => {
+        const option = document.createElement("option");
+        option.textContent = grado.nombre;
+        option.value = indice.toString();
+        selectorGrado.appendChild(option);
+    });
+}
+function generarOpcionesMaterias() { // segun el grado elegido generar la opciones correspondientes
+    const indiceGrado = parseInt(selectorGrado.value);
+    const gradoSeleccionado = grados[indiceGrado];
+
+    selectorMateria.innerHTML =
+        '<option value="">--- Seleccionar Opción ---</option>';
+
+    if (gradoSeleccionado) {
+        gradoSeleccionado.materia.forEach((materia, indice) => {
+        const opcion = document.createElement("option");
+        opcion.value = indice.toString();
+        opcion.textContent = materia.nombre;
+        selectorMateria.appendChild(opcion);
+        });
+    }
+}
+selectorGrado.addEventListener("change", generarOpcionesMaterias);
+
 btnBusc.onclick = () => {
     contListaAlum.classList.remove("d-none");
     mostrarTablaAlumnosRegNotas();
 };
 
-function mostrarTablaAlumnosRegNotas() {
+function mostrarTablaAlumnosRegNotas() { // genera la tabla segun el grado y materia para llenar las notas de los alumnos, asi mismo trae las notas previamente guardadas y se pueden modificar de ser necesario
     let iGrado = selectorGrado.value;
     let iMateria = selectorMateria.value;
 
@@ -275,7 +275,7 @@ function mostrarTablaAlumnosRegNotas() {
         tbody.appendChild(fila);
 
         // Evento al ingresar nota
-        notasInput.forEach((input, index) => {
+        notasInput.forEach((input) => {
         input.addEventListener('input', () => {
             const nota = parseFloat(input.value);
 
@@ -431,7 +431,7 @@ btnBuscVisNotas.onclick = () => {
     mostrarTablaAlumnosVisuNotas();
 };
 
-function mostrarTablaAlumnosVisuNotas(){
+function mostrarTablaAlumnosVisuNotas(){ // genera la tabla mostrando las notas cargadas
     let iGrado = selectorGradoVisu.value;
     let iMateria = selectorMateriaVisu.value;
 
